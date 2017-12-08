@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration 
+		SYSTEM  "src/main/resource/mybatis-generator-config_1_0.dtd">
+
+<!-- 配置Run As Maven build : Goals 参数 : mybatis-generator:generate -Dmybatis.generator.overwrite=true -->
+<!-- 配置 tableName,使用 Run As Maven build 生成 dao model 层 -->
+<generatorConfiguration>
+	<!-- 配置文件路径 -->
+	<properties url="${mybatis.generator.generatorConfig.properties}" />
+
+	<!--数据库驱动包路径 -->
+	<classPathEntry location="${drive.class.path}" />
+
+	<context id="MySqlTables" targetRuntime="MyBatis3" defaultModelType="flat">
+		<!-- 分页插件 -->
+		<plugin type="org.mybatis.generator.plugins.MySQLLimitPlugin"></plugin>
+		<!--关闭注释 -->
+		<commentGenerator>
+			<property name="suppressAllComments" value="true" />
+		</commentGenerator>
+
+		<!--数据库连接信息 -->
+		<jdbcConnection driverClass="${jdbc.driver}" connectionURL="${jdbc.url}" userId="${jdbc.username}"
+			password="${jdbc.password}">
+		</jdbcConnection>
+
+		<!--生成的model -->
+		<javaModelGenerator overwrite="true" targetPackage="${model.package}" targetProject="${model.project}">
+			<property name="rootClass" value="com.medical.platform.core.generate.BaseEntity" />
+			<property name="rootExampleClass" value="com.medical.platform.core.generate.AbstractExample" />
+			<property name="rootCriteriaClass" value="com.medical.platform.core.generate.AbstractCriteria" />
+			<property name="BaseSqlOperatorClass" value="com.medical.platform.core.generate.BaseSqlOperator" />
+		</javaModelGenerator>
+
+		<javaModelDtoGenerator overwrite="false" targetPackage="${dto.package}" targetProject="${dto.project}" />
+
+		<!--生成xml mapper文件 -->
+		<sqlMapGenerator overwrite="true" targetPackage="${xml.mapper.package}" targetProject="${dao.project}">
+			<property name="rootInterface" value="com.medical.platform.core.generate.SqlMapper" />
+		</sqlMapGenerator>
+
+		<!--生成service -->
+		<javaClientGenerator overwrite="true" type="MAPPER" targetPackage="${mapper.package}"
+			targetProject="${dao.project}">
+			<property name="rootInterface" value="com.medical.platform.core.generate.SqlMapper" />
+		</javaClientGenerator>
+
+		<javaServiceGenerator overwrite="false" targetPackage="${service.package}" targetProject="${service.project}"
+			implementationPackage="impl">
+			<property name="enableSubPackages" value="true" />
+			<property name="rootClass" value="com.medical.platform.core.generate.BaseServiceImpl" />
+			<property name="rootInterface" value="com.medical.platform.core.generate.IBaseService" />
+		</javaServiceGenerator>
+
+		<blankSqlMapGenerator overwrite="false" targetPackage="${blank_xml.mapper.package}"
+			targetProject="${dao.project}" />
+
+		<blankJavaClientGenerator overwrite="false" type="MAPPER" targetPackage="${blank_mapper.package}"
+			targetProject="${dao.project}" />
+
+		<javaControllerGenerator overwrite="false" targetPackage="${controller.package}"
+			targetProject="${controller.project}">
+			<property name="rootClass" value="com.medical.platform.core.generate.BaseController" />
+			<property name="SearchBeanClass" value="com.medical.platform.core.generate.SearchBean" />
+			<property name="BasicExceptionClass" value="com.medical.platform.core.generate.BasicException" />
+		</javaControllerGenerator>
+
+		<table tableName="settlement_item_doctor" domainObjectName="SettlementItemDoctor">
+			<generatedKey column="_id" identity="true" sqlStatement="JDBC" />
+			<foreignKey keyColumn="_id" column="_doctor_id" table="doctor" mappedField="doctor" />
+			<foreignKey keyColumn="_id" column="_settlement_id" table="settlement" mappedField="settlement" />
+		</table>
+		<table tableName="chat_session" domainObjectName="ChatSession">
+			<generatedKey column="_id" identity="true" sqlStatement="JDBC" />
+			<foreignKey keyColumn="_id" column="_customer_service_id" table="sys_user" mappedField="customerService" />
+			<foreignKey keyColumn="_id" column="_doctor_id" table="doctor" useAssociation="false">
+				<foreignKey keyColumn="_id" column="_hospital_id" table="hospital" mappedField="hospital" />
+				<foreignKey keyColumn="_id" column="_department_id" table="department" />
+			</foreignKey>
+			<foreignKey keyColumn="_id" column="_order_detail_id" table="order_detail" />
+			<foreignKey keyColumn="_id" column="_user_id" table="user" />
+		</table>
+		<table tableName="hospital" domainObjectName="Hospital">
+			<generatedKey column="_id" identity="true" sqlStatement="JDBC" />
+			<foreignKey keyColumn="_code" column="_province_id" table="sys_province" mappedField="province" />
+			<foreignKey keyColumn="_code" column="_city_id" table="sys_city" mappedField="city" />
+			<foreignKey keyColumn="_code" column="_county_id" table="sys_county" mappedField="country" />
+		</table>
+		<table tableName="sys_city" domainObjectName="SysCity">
+			<generatedKey column="_id" identity="true" sqlStatement="JDBC" />
+		</table>
+		<table tableName="sys_county" domainObjectName="SysCounty">
+			<generatedKey column="_id" identity="true" sqlStatement="JDBC" />
+		</table>
+		<table tableName="sys_province" domainObjectName="SysProvince">
+			<generatedKey column="_id" identity="true" sqlStatement="JDBC" />
+		</table>
+		<table tableName="doctor" domainObjectName="Doctor">
+			<generatedKey column="_id" identity="true" sqlStatement="JDBC" />
+			<foreignKey keyColumn="_id" column="_hospital_id" table="hospital" mappedField="hospital" />
+			<foreignKey keyColumn="_id" column="_department_id" table="department" />
+		</table>
+		<table tableName="department" domainObjectName="Department">
+			<generatedKey column="_id" identity="true" sqlStatement="JDBC" />
+		</table>
+		<table tableName="chat_record" domainObjectName="ChatRecord">
+			<generatedKey column="_id" identity="true" sqlStatement="JDBC" />
+			<foreignKey keyColumn="_id" column="_user_id" table="user" />
+			<foreignKey keyColumn="_id" column="_doctor_id" table="doctor" />
+			<foreignKey keyColumn="_id" column="_system_user_id" table="sys_user" />
+			<foreignKey keyColumn="_id" column="_chat_session_id" table="chat_session" />
+		</table>
+		<table tableName="chat_record_route" domainObjectName="ChatRecordRoute">
+			<generatedKey column="_id" identity="true" sqlStatement="JDBC" />
+			<foreignKey keyColumn="_id" column="_user_id" table="user" />
+			<foreignKey keyColumn="_id" column="_doctor_id" table="doctor" />
+			<foreignKey keyColumn="_id" column="_system_user_id" table="sys_user" />
+			<foreignKey keyColumn="_id" column="_chat_session_id" table="chat_session" />
+		</table>
+		<table tableName="config_item" domainObjectName="ConfigItem">
+			<generatedKey column="_id" identity="true" sqlStatement="JDBC" />
+		</table>
+		<table tableName="doctor_account" domainObjectName="DoctorAccount">
+			<generatedKey column="_id" identity="true" sqlStatement="JDBC" />
+		</table>
+		<table tableName="doctor_account_detail" domainObjectName="DoctorAccountDetail">
+			<generatedKey column="_id" identity="true" sqlStatement="JDBC" />
+		</table>
+		<table tableName="doctor_schedule" domainObjectName="DoctorSchedule">
+			<generatedKey column="_id" identity="true" sqlStatement="JDBC" />
+		</table>
+		<table tableName="doctor_schedule_item" domainObjectName="DoctorScheduleItem">
+			<generatedKey column="_id" identity="true" sqlStatement="JDBC" />
+			<foreignKey keyColumn="_id" column="_schedule_id" table="doctor_schedule" />
+		</table>
+		<table tableName="doctorl_schedule_rule" domainObjectName="DoctorlScheduleRule">
+			<generatedKey column="_id" identity="true" sqlStatement="JDBC" />
+		</table>
+		<table tableName="evaluation" domainObjectName="Evaluation">
+			<generatedKey column="_id" identity="true" sqlStatement="JDBC" />
+		</table>
+		<table tableName="log_record" domainObjectName="LogRecord">
+			<generatedKey column="_id" identity="true" sqlStatement="JDBC" />
+		</table>
+		<table tableName="order_detail" domainObjectName="OrderDetail">
+			<generatedKey column="_id" identity="true" sqlStatement="JDBC" />
+			<foreignKey keyColumn="_id" column="_order_id" table="order_tab" />
+			<foreignKey keyColumn="_id" column="_doctor_schedule_item_id" table="doctor_schedule_item" />
+		</table>
+		<table tableName="order_payment" domainObjectName="OrderPayment">
+			<generatedKey column="_id" identity="true" sqlStatement="JDBC" />
+		</table>
+		<table tableName="order_tab" domainObjectName="OrderTab">
+			<generatedKey column="_id" identity="true" sqlStatement="JDBC" />
+			<foreignKey keyColumn="_id" column="_user_id" table="user" />
+			<foreignKey keyColumn="_id" column="_doctor_id" table="doctor" />
+		</table>
+		<table tableName="reward_record" domainObjectName="RewardRecord">
+			<generatedKey column="_id" identity="true" sqlStatement="JDBC" />
+		</table>
+		<table tableName="science_catetory" domainObjectName="ScienceCatetory">
+			<generatedKey column="_id" identity="true" sqlStatement="JDBC" />
+		</table>
+		<table tableName="role_menu_map" domainObjectName="RoleMenuMap">
+			<generatedKey column="_id" identity="true" sqlStatement="JDBC" />
+		</table>
+		<table tableName="science_item" domainObjectName="ScienceItem">
+			<generatedKey column="_id" identity="true" sqlStatement="JDBC" />
+			<foreignKey keyColumn="_id" column="_category_id" table="science_catetory" />
+		</table>
+		<table tableName="service_item" domainObjectName="ServiceItem">
+			<generatedKey column="_id" identity="true" sqlStatement="JDBC" />
+		</table>
+		<table tableName="settlement" domainObjectName="Settlement">
+			<generatedKey column="_id" identity="true" sqlStatement="JDBC" />
+		</table>
+		<table tableName="settlement_item" domainObjectName="SettlementItem">
+			<generatedKey column="_id" identity="true" sqlStatement="JDBC" />
+			<foreignKey keyColumn="_id" column="_order_id" table="order_tab" />
+			<foreignKey keyColumn="_id" column="_settlement_id" table="settlement" />
+		</table>
+		<table tableName="sys_menu" domainObjectName="SysMenu">
+			<generatedKey column="_id" identity="true" sqlStatement="JDBC" />
+		</table>
+		<table tableName="sys_role" domainObjectName="SysRole">
+			<generatedKey column="_id" identity="true" sqlStatement="JDBC" />
+		</table>
+		<table tableName="sys_role_menu" domainObjectName="SysRoleMenu">
+			<generatedKey column="_id" identity="true" sqlStatement="JDBC" />
+			<foreignKey keyColumn="_id" column="_menu_id" table="sys_menu" />
+		</table>
+		<table tableName="sys_user" domainObjectName="SysUser">
+			<generatedKey column="_id" identity="true" sqlStatement="JDBC" />
+		</table>
+		<table tableName="system_message" domainObjectName="SystemMessage">
+			<generatedKey column="_id" identity="true" sqlStatement="JDBC" />
+		</table>
+		<table tableName="user" domainObjectName="User">
+			<generatedKey column="_id" identity="true" sqlStatement="JDBC" />
+		</table>
+		<table tableName="user_feedback" domainObjectName="UserFeedback">
+			<generatedKey column="_id" identity="true" sqlStatement="JDBC" />
+			<foreignKey keyColumn="_id" column="_user_id" table="user" />
+		</table>
+	</context>
+</generatorConfiguration>
